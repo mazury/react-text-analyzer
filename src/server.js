@@ -1,3 +1,8 @@
+import React from 'react';
+import { renderToString } from 'react-dom/server';
+import { StaticRouter } from 'react-router-dom';
+import { match, RouterContext } from 'react-router';
+import AppRoutes from './components/AppRoutes';
 
 const server = require('express');
 const app = new server();
@@ -6,12 +11,9 @@ const path = require('path');
 const multer  = require('multer');
 const upload = multer();
 const functionWords = require('./functionWords')
-import React from 'react';
-import { renderToString } from 'react-dom/server';
-import { StaticRouter } from 'react-router-dom';
-import  AppRoutes from './components/AppRoutes';
 
 const port = process.env.PORT || 3000;
+
 
 // Access control headers
 app.use(function(req, res, next) {
@@ -20,23 +22,21 @@ app.use(function(req, res, next) {
   next();
 });
 
-
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// console.log(process.env.UNIVERSAL);
 app.use(server.static(path.join(__dirname, 'public')));
 
 app.get('*', (req, res) => {
   let markup = '';
   let status = 200;
 
-  // if (process.env.UNIVERSAL) {
-    const context = {};
-    markup = renderToString(
-      <StaticRouter location={req.url} context={context}>
-        <AppRoutes />
-      </StaticRouter>,
+// if (process.env.UNIVERSAL) {
+  const context = {};
+  markup = renderToString(
+    <StaticRouter location={req.url} context={context}>
+    <AppRoutes />
+    </StaticRouter>,
     );
 
     // context.url will contain the URL to redirect to if a <Redirect> was used
@@ -53,7 +53,7 @@ app.get('*', (req, res) => {
 });
 
 // Handle single file upload
-app.post('/upload', upload.single('afile'), function (req, res) {
+app.post('/single', upload.single('afile'), function (req, res) {
   if(req.file) {
     const data = req.file.buffer
     const convBuffer = data.toString()
@@ -127,14 +127,14 @@ app.post('/upload', upload.single('afile'), function (req, res) {
       'najczęstsze słowa znaczące': topTenLexical,
       'gęstość leksykalna': (lexicalWordsCount / wordCount).toFixed(3),
     // Lexical density is defined as the number of lexical words (or content words) divided by the total number of words
-      'znaki zapytania': /\?/.test(convBuffer) ? convBuffer.match(/\?/g).length : 0,
-      wykrzykniki: /!/.test(convBuffer) ? convBuffer.match(/!/g).length : 0,
-      przecinki: /,/.test(convBuffer) ? convBuffer.match(/,/g).length : 0,
-      średniki: /;/.test(convBuffer) ? convBuffer.match(/;/g).length : 0,
-      dwukropki: /:/.test(convBuffer) ? convBuffer.match(/:/g).length : 0,
-      cudzysłowy: /”/.test(convBuffer) ? convBuffer.match(/”/g).length : 0,
-      nawiasy: /\(/.test(convBuffer) ? convBuffer.match(/\(/g).length : 0,
-      wielokropki: /\.{3}/.test(convBuffer) ? convBuffer.match(/\.{3}/g).length : 0,
+    'znaki zapytania': /\?/.test(convBuffer) ? convBuffer.match(/\?/g).length : 0,
+    wykrzykniki: /!/.test(convBuffer) ? convBuffer.match(/!/g).length : 0,
+    przecinki: /,/.test(convBuffer) ? convBuffer.match(/,/g).length : 0,
+    średniki: /;/.test(convBuffer) ? convBuffer.match(/;/g).length : 0,
+    dwukropki: /:/.test(convBuffer) ? convBuffer.match(/:/g).length : 0,
+    cudzysłowy: /”/.test(convBuffer) ? convBuffer.match(/”/g).length : 0,
+    nawiasy: /\(/.test(convBuffer) ? convBuffer.match(/\(/g).length : 0,
+    wielokropki: /\.{3}/.test(convBuffer) ? convBuffer.match(/\.{3}/g).length : 0,
       // 'wystąpienia': occurences
       // 'zdania': functionWords.functionWords,
       // 'liczba zdań': 
@@ -144,6 +144,14 @@ app.post('/upload', upload.single('afile'), function (req, res) {
     res.status(400).end();
   }
 });
+
+app.post('/multiple', upload.array('afile'), function (req, res) {
+  if(req.files) {
+    console.log(data);
+    // const data = req.file.buffer
+    // const convBuffer = data.toString()
+  }
+})
 
 
 

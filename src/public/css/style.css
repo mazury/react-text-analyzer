@@ -11,10 +11,6 @@
   color: white;
 }
 
-.navbar-nav {
-  margin: auto;
-}
-
 .container {
 	width: 80%;
 	max-width: 600px !important;
@@ -34,4 +30,14 @@ tr td:last-child {
 
 .form-control-file {
 	display: inline-block !important;
+}
+
+.nav-tabs {
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.form-check {
+  text-align: left;
+  margin-left: 20%;
 }
