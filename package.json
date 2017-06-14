@@ -29,7 +29,7 @@
     "react-scripts": "1.0.7"
   },
   "scripts": {
-    "start": "npm run builds && babel-node src/server.js",
+    "start": "node babel-node src/server.js",
     "start:dev": "export SET NODE_ENV=development && npm run build:dev && nodemon --exec babel-node -- src/server.js",
     "start:universal": "export SET UNIVERSAL=true && npm run start",
     "start:dev:universal": "export SET NODE_ENV=development && export SET UNIVERSAL=true && npm run start:dev",
